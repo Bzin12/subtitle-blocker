@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Subtitle Blocker",
+  "version": "1.0",
+  "description": "Covers subtitles with a resizable black rectangle, works in fullscreen",
+  "permissions": ["storage", "activeTab"],
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Subtitle Blocker"
+  }
+}
