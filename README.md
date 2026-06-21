@@ -43,23 +43,26 @@ A Chrome extension that covers video subtitles with a resizable black rectangle.
 - Click **Hide / Show** to toggle visibility
 - On the page, **drag** the rectangle to move it
 - **Drag the bottom-right corner** to resize it directly
-- **Hover** your mouse over the rectangle, then use **Arrow keys** to toggle halves to 90% transparency:
-  - `↑` — bottom half becomes 90% transparent (press again to restore)
-  - `↓` — top half becomes 90% transparent (press again to restore)
-  - `←` — right half becomes 90% transparent (press again to restore)
-  - `→` — left half becomes 90% transparent (press again to restore)
+- **Hover** your mouse over the rectangle, then use **Arrow keys** to reveal subtitles:
+  - `↑` — bottom half becomes 90% transparent (subtitles below show through); press again to restore
+  - `↓` — top half becomes 90% transparent (subtitles above show through); press again to restore
+  - `←` — right half becomes 90% transparent (subtitles on the right show through); press again to restore
+  - `→` — left half becomes 90% transparent (subtitles on the left show through); press again to restore
+- The arrow points in the direction that stays covered; the **opposite** half turns transparent so you can read the subtitles underneath
 - Multiple halves can be transparent at the same time for a smaller effective viewing area
 
 - 点击工具栏中的扩展图标打开弹出窗口
-- 调整**宽度**和**高度**滑块来改变矩形大小
+- 调整**宽度**和**高度**滑块来调整矩形大小
 - 点击**隐藏/显示**切换可见性
 - 在页面上**拖动**矩形来移动位置
 - **拖动右下角**直接调整大小
-- **鼠标悬停**在矩形上，然后使用**方向键**切换半段为 90% 透明：
-  - `↑` — 下半段变为 90% 透明（再次按下恢复）
-  - `↓` — 上半段变为 90% 透明（再次按下恢复）
-  - `←` — 右半段变为 90% 透明（再次按下恢复）
-  - `→` — 左半段变为 90% 透明（再次按下恢复）
+- **鼠标悬停**在矩形上，然后使用**方向键**查看字幕：
+  - `↑` — 下半段变为 90% 透明（下方的字幕显示出来），再次按下恢复遮挡
+  - `↓` — 上半段变为 90% 透明（上方的字幕显示出来），再次按下恢复遮挡
+  - `←` — 右半段变为 90% 透明（右侧的字幕显示出来），再次按下恢复遮挡
+  - `→` — 左半段变为 90% 透明（左侧的字幕显示出来），再次按下恢复遮挡
+- 箭头的方向表示保持遮挡的那一侧，**相反方向**的黑色方块变为 90% 透明，从而显示字幕
+- 此功能用于在没听清或没听懂时，临时查看字幕内容
 - 可同时将多个半段设为透明，以获得更小的有效遮挡区域
 
 ## Files / 文件说明
