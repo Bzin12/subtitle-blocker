@@ -10,6 +10,8 @@
   let settings = { width: 500, height: 80, visible: true }
   let pos = { bottom: 50 }
   let inFullscreen = false
+  const clipped = { top: false, right: false, bottom: false, left: false }
+  let isHovering = false
 
   function init() {
     chrome.storage.sync.get(
@@ -65,16 +67,32 @@
     overlay.id = 'subtitle-blocker-overlay'
 
     overlay.style.cssText =
-      'position:fixed;background:#000;z-index:2147483647;cursor:move;' +
+      'position:fixed;background:transparent;z-index:2147483647;cursor:move;' +
       'box-sizing:border-box;user-select:none;touch-action:none;' +
       'width:' + settings.width + 'px;height:' + settings.height + 'px;' +
       'bottom:' + (pos.bottom || 50) + 'px;left:50%;transform:translateX(-50%);' +
       'display:' + (settings.visible ? 'block' : 'none')
 
+    var quadrants = [
+      { key: 'tl', style: 'top:0;left:0;width:50%;height:50%;' },
+      { key: 'tr', style: 'top:0;right:0;width:50%;height:50%;' },
+      { key: 'bl', style: 'bottom:0;left:0;width:50%;height:50%;' },
+      { key: 'br', style: 'bottom:0;right:0;width:50%;height:50%;' },
+    ]
+    quadrants.forEach(function (q) {
+      var div = document.createElement('div')
+      div.className = 'subtitle-quadrant'
+      div.dataset.quadrant = q.key
+      div.style.cssText =
+        'position:absolute;background:#000;pointer-events:none;' + q.style
+      overlay.appendChild(div)
+    })
+
     resizeHandle = document.createElement('div')
     resizeHandle.style.cssText =
       'position:absolute;right:0;bottom:0;width:16px;height:16px;' +
-      'cursor:nwse-resize;background:linear-gradient(135deg,transparent 50%,#555 50%)'
+      'cursor:nwse-resize;background:linear-gradient(135deg,transparent 50%,#555 50%);' +
+      'z-index:1'
 
     overlay.appendChild(resizeHandle)
     document.body.appendChild(overlay)
@@ -83,6 +101,9 @@
     resizeHandle.addEventListener('mousedown', onResizeStart)
     document.addEventListener('mousemove', onMouseMove)
     document.addEventListener('mouseup', onMouseUp)
+    overlay.addEventListener('mouseenter', function () { isHovering = true })
+    overlay.addEventListener('mouseleave', function () { isHovering = false })
+    document.addEventListener('keydown', onKeyDown)
   }
 
   function onDragStart(e) {
@@ -137,6 +158,58 @@
     if (isResizing) {
       isResizing = false
       chrome.storage.sync.set({ width: settings.width, height: settings.height })
+    }
+  }
+
+  function updateOpacity() {
+    if (!overlay) return
+    const q = overlay.querySelectorAll('.subtitle-quadrant')
+    const opacities = {
+      tl: clipped.top || clipped.left ? 0.1 : 1,
+      tr: clipped.top || clipped.right ? 0.1 : 1,
+      bl: clipped.bottom || clipped.left ? 0.1 : 1,
+      br: clipped.bottom || clipped.right ? 0.1 : 1,
+    }
+    q.forEach(function (el) {
+      el.style.opacity = opacities[el.dataset.quadrant]
+    })
+  }
+
+  function onKeyDown(e) {
+    if (
+      !overlay ||
+      !isHovering ||
+      e.target.tagName === 'INPUT' ||
+      e.target.tagName === 'TEXTAREA' ||
+      e.target.isContentEditable
+    )
+      return
+
+    let changed = false
+
+    switch (e.key) {
+      case 'ArrowUp':
+        clipped.bottom = !clipped.bottom
+        changed = true
+        break
+      case 'ArrowDown':
+        clipped.top = !clipped.top
+        changed = true
+        break
+      case 'ArrowLeft':
+        clipped.right = !clipped.right
+        changed = true
+        break
+      case 'ArrowRight':
+        clipped.left = !clipped.left
+        changed = true
+        break
+    }
+
+    if (changed) {
+      e.preventDefault()
+      e.stopPropagation()
+      updateOpacity()
     }
   }
 
